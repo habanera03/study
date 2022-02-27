@@ -1,0 +1,3 @@
+/home/ec2-user
+/var/lib/jenkins/
+/var/lib/jenkins/logs/nohup
