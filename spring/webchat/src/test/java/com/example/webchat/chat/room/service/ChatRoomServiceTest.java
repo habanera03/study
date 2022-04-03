@@ -44,4 +44,14 @@ class ChatRoomServiceTest {
         assertThat(chatRoomService.findRoomInfos().get(0).getUserCount()).isEqualTo(0);
     }
 
+    @Test
+    void testAddUser() {
+        String userName = "user1";
+        ChatRoom chatRoom = chatRoomService.create("room1");
+        chatRoomService.addUser(chatRoom.getId(), userName);
+
+        assertThat(chatRoomService.getRoomUsers(chatRoom.getId()).size()).isEqualTo(1);
+        assertThat(chatRoomService.getRoomUsers(chatRoom.getId())).contains(userName);
+    }
+
 }

@@ -7,9 +7,9 @@ import lombok.Getter;
 public class ChatRoomResponse {
 
     private final ChatRoom chatRoom;
-    private final long userCount;
+    private final int userCount;
 
-    public ChatRoomResponse(ChatRoom chatRoom, long userCount) {
+    public ChatRoomResponse(ChatRoom chatRoom, int userCount) {
         this.chatRoom = chatRoom;
         this.userCount = userCount;
     }
