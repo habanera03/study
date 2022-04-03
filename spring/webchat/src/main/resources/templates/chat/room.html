@@ -40,6 +40,9 @@
                     ws.subscribe('/topic/chat/room/' + chat.data.roomId, function (message) {
                         chat.obj.messages.append('<li>' + chat.createMessage(JSON.parse(message.body)) + '</li>');
                     }, {'roomId': chat.data.roomId});
+                    ws.subscribe('/user/topic/errors', function (message) {
+                        alert(JSON.parse(message.body).message);
+                    });
                 }, function (error) {
                     chat.fail();
                 });

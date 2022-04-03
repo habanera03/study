@@ -3,8 +3,8 @@ package com.example.webchat.stomp.filter;
 import com.example.webchat.chat.message.ChatMessage;
 import com.example.webchat.chat.message.service.ChatMessageService;
 import com.example.webchat.chat.room.service.ChatRoomService;
+import com.example.webchat.stomp.StompPrincipal;
 import com.example.webchat.web.security.JwtTokenProvider;
-import java.security.Principal;
 import java.util.Optional;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -36,14 +36,14 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
             connect(headerAccessor);
         } else if (StompCommand.SUBSCRIBE == headerAccessor.getCommand()
             && Optional.ofNullable(headerAccessor.getDestination()).orElse("").contains("/topic/chat/room/")) {
-            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName)
-                                  .orElse("UnknownUser");
             chatMessageService.send(
                 new ChatMessage(
                     headerAccessor.getFirstNativeHeader("roomId"),
                     ChatMessage.MessageType.ENTER,
                     "",
-                    name + "님 입장"));
+                    Optional.ofNullable((StompPrincipal) message.getHeaders().get("simpUser"))
+                            .map(StompPrincipal::getUserName)
+                            .orElse("UnknownUser") + "님 입장"));
         }
         return message;
     }

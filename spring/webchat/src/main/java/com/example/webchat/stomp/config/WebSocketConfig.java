@@ -1,5 +1,6 @@
 package com.example.webchat.stomp.config;
 
+import com.example.webchat.stomp.handler.StompHandshakeHandler;
 import com.example.webchat.stomp.filter.FilterChannelInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -20,13 +21,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-chat").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws-chat").setAllowedOriginPatterns("*")
+                .setHandshakeHandler(new StompHandshakeHandler())
+                .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.setApplicationDestinationPrefixes("/app");
-        config.enableSimpleBroker("/topic", "/queue");
+        config.enableSimpleBroker("/topic");
     }
 
     @Override
