@@ -25,6 +25,10 @@ public class ChatMessage {
         return "/topic/chat/room/" + this.roomId;
     }
 
+    public String errorTopic() {
+        return "/topic/errors";
+    }
+
     public enum MessageType {
         ENTER, QUIT, MESSAGE;
     }
