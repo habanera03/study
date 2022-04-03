@@ -5,6 +5,7 @@ import com.example.webchat.chat.room.dto.ChatRoomResponse;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,9 +43,23 @@ public class ChatRoomService {
     public List<ChatRoomResponse> findRoomInfos() {
         return findAll()
             .stream()
-            .map(chatRoom -> new ChatRoomResponse(
-                chatRoom,
-                Optional.ofNullable(users.members(USER_OPS_ID + chatRoom.getId())).orElseGet(HashSet::new).size()))
+            .map(chatRoom -> {
+                return new ChatRoomResponse(
+                    chatRoom,
+                    Optional.ofNullable(getRoomUsers(chatRoom.getId())).orElseGet(HashSet::new).size());
+            })
             .collect(Collectors.toList());
+    }
+
+    public Set<Object> getRoomUsers(String roomId) {
+        return users.members(USER_OPS_ID + roomId);
+    }
+
+    public void addUser(String roomId, String userName) {
+        ChatRoom byRoomId;
+        if ((byRoomId = findByRoomId(roomId)) == null) {
+            return;
+        }
+        users.add(USER_OPS_ID + byRoomId.getId(), userName);
     }
 }

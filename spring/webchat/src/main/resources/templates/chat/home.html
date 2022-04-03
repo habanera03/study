@@ -21,8 +21,8 @@
     </thead>
     <tbody>
     <tr th:each="room : ${rooms}">
-        <td><a href="" th:href="@{|/chat/${room.chatRoom.name}|}" th:text="${room.chatRoom.name}">제목</a></td>
-        <td th:text="${room.userCount}">0</td>
+        <td><a href="" th:href="@{|/chat/room/${room.chatRoom.id}|}" th:text="${room.chatRoom.name}">제목</a></td>
+        <td th:text="${room.userCount}">000</td>
     </tr>
     </tbody>
 </table>
