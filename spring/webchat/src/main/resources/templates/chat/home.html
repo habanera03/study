@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>채팅방</title>
 </head>
 <body>
-
+<form action="home.html" th:action="@{/chat/room}" method="post">
+    <label>
+        <input type="text" name="roomName"/>
+        <input type="submit" value="생성">
+    </label>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th th:text="#{label.room.name}">방제목</th>
+        <th th:text="#{label.room.userCount}">참여자 수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="room : ${rooms}">
+        <td><a href="" th:href="@{|/chat/${room.chatRoom.name}|}" th:text="${room.chatRoom.name}">제목</a></td>
+        <td th:text="${room.userCount}">0</td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
