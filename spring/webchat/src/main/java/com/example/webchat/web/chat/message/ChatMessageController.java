@@ -4,6 +4,7 @@ import com.example.webchat.chat.message.ChatMessage;
 import com.example.webchat.chat.message.ChatMessage.MessageType;
 import com.example.webchat.chat.message.service.ChatMessageService;
 import com.example.webchat.stomp.StompPrincipal;
+import com.example.webchat.util.GlobalConst;
 import java.security.Principal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,7 +44,11 @@ public class ChatMessageController {
 
     @MessageExceptionHandler
     public void exceptionHandler(Throwable exception, @Header("roomId") String roomId, Principal principal) {
-        ChatMessage chatMessage = new ChatMessage(roomId, MessageType.MESSAGE, "", exception.getMessage());
+        ChatMessage chatMessage = new ChatMessage(
+            roomId,
+            MessageType.MESSAGE,
+            GlobalConst.EMPTY,
+            exception.getMessage());
         messagingTemplate.convertAndSendToUser(principal.getName(), chatMessage.errorTopic(), chatMessage);
     }
 
