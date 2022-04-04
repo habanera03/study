@@ -1,5 +1,6 @@
 package com.example.webchat.stomp.config;
 
+import com.example.webchat.stomp.StompConst;
 import com.example.webchat.stomp.handler.StompHandshakeHandler;
 import com.example.webchat.stomp.filter.FilterChannelInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -14,22 +15,25 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final FilterChannelInterceptor channelInterceptor;
+    private final StompHandshakeHandler handshakeHandler;
 
-    public WebSocketConfig(FilterChannelInterceptor channelInterceptor) {
+    public WebSocketConfig(FilterChannelInterceptor channelInterceptor, StompHandshakeHandler handshakeHandler) {
         this.channelInterceptor = channelInterceptor;
+        this.handshakeHandler = handshakeHandler;
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-chat").setAllowedOriginPatterns("*")
-                .setHandshakeHandler(new StompHandshakeHandler())
+        registry.addEndpoint(StompConst.ENDPOINT)
+                .setAllowedOriginPatterns(StompConst.ALLOW_ORIGIN_PATTERNS)
+                .setHandshakeHandler(handshakeHandler)
                 .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.setApplicationDestinationPrefixes("/app");
-        config.enableSimpleBroker("/topic");
+        config.setApplicationDestinationPrefixes(StompConst.APPLICATION_DESTINATION_PREFIX);
+        config.enableSimpleBroker(StompConst.SIMPLE_BROKER);
     }
 
     @Override
