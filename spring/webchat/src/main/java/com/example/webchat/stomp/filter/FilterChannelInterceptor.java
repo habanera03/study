@@ -6,6 +6,7 @@ import com.example.webchat.chat.message.service.ChatMessageService;
 import com.example.webchat.chat.room.service.ChatRoomService;
 import com.example.webchat.stomp.StompConst;
 import com.example.webchat.stomp.StompPrincipal;
+import com.example.webchat.util.GlobalConst;
 import com.example.webchat.web.security.JwtTokenProvider;
 import java.util.Optional;
 import org.springframework.messaging.Message;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FilterChannelInterceptor implements ChannelInterceptor {
 
-    private static final String EMPTY = "";
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -39,7 +39,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
         if (StompCommand.CONNECT == headerAccessor.getCommand()) {
             connect(getName(message), getUserName(message), headerAccessor);
         } else if (StompCommand.SUBSCRIBE == headerAccessor.getCommand()
-            && Optional.ofNullable(headerAccessor.getDestination()).orElse(EMPTY)
+            && Optional.ofNullable(headerAccessor.getDestination()).orElse(GlobalConst.EMPTY)
                        .contains(ChatMessageConst.MESSAGE_TOPIC)) {
             chatSubscribe(getUserName(message), headerAccessor);
         }
@@ -58,7 +58,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
             new ChatMessage(
                 headerAccessor.getFirstNativeHeader(StompConst.ROOM_ID),
                 ChatMessage.MessageType.ENTER,
-                EMPTY,
+                GlobalConst.EMPTY,
                 userName + "님 입장"));
     }
 
