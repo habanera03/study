@@ -22,11 +22,11 @@ public class ChatMessage {
     }
 
     public String topic() {
-        return "/topic/chat/room/" + this.roomId;
+        return ChatMessageConst.MESSAGE_TOPIC + this.roomId;
     }
 
     public String errorTopic() {
-        return "/topic/errors";
+        return ChatMessageConst.ERROR_TOPIC;
     }
 
     public enum MessageType {
