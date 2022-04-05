@@ -11,8 +11,10 @@ public class RedisProperties {
     private final String redisHost;
     private final int redisPort;
 
-    public RedisProperties(@Value("${spring.redis.host}") String redisHost,
-                           @Value("${spring.redis.port}") int redisPort) {
+    public RedisProperties(
+        @Value("${spring.redis.host}") String redisHost,
+        @Value("${spring.redis.port}") int redisPort) {
+
         this.redisHost = redisHost;
         this.redisPort = redisPort;
     }

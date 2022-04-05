@@ -30,27 +30,22 @@
         },
         data: {
             roomId: [[${roomId}]],
-            type: 'MESSAGE',
-            token: ''
+            type: 'MESSAGE'
         },
         connect: function () {
-            let succeed = function (data) {
-                chat.data.token = data.token;
-                ws.connect({'token': chat.data.token, 'roomId': chat.data.roomId}, function (frame) {
-                    ws.subscribe('/topic/chat/room/' + chat.data.roomId, function (message) {
-                        chat.obj.messages.append('<li>' + chat.createMessage(JSON.parse(message.body)) + '</li>');
-                    }, {'roomId': chat.data.roomId});
-                    ws.subscribe('/user/topic/errors', function (message) {
-                        alert(JSON.parse(message.body).message);
-                    });
-                }, function (error) {
-                    chat.fail();
+            ws.connect({'roomId': chat.data.roomId}, function (frame) {
+                ws.subscribe('/topic/chat/room/' + chat.data.roomId, function (message) {
+                    chat.obj.messages.append('<li>' + chat.createMessage(JSON.parse(message.body)) + '</li>');
+                }, {'roomId': chat.data.roomId});
+                ws.subscribe('/user/topic/errors', function (message) {
+                    alert(JSON.parse(message.body).message);
                 });
-            };
-            chat.send('/chat/connection', 'get', succeed);
+            }, function (error) {
+                chat.fail();
+            });
         },
         message: function () {
-            ws.send('/app/chat/message', {'token': chat.data.token, 'roomId': chat.data.roomId},
+            ws.send('/app/chat/message', {'roomId': chat.data.roomId},
                 JSON.stringify({messageType: chat.data.type, message: chat.obj.message.val()}));
             chat.obj.message.val('');
         },

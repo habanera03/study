@@ -1,6 +1,7 @@
 package com.example.webchat.chat.room.service;
 
 import com.example.webchat.chat.room.ChatRoom;
+import com.example.webchat.chat.room.ChatRoomConst;
 import com.example.webchat.chat.room.dto.ChatRoomResponse;
 import java.util.HashSet;
 import java.util.List;
@@ -15,9 +16,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatRoomService {
 
-    private static final String CHATROOM_OPS_ID = "room";
-    private static final String USER_OPS_ID = "user";
-
     private final HashOperations<String, String, ChatRoom> rooms;
     private final SetOperations<String, Object> users;
 
@@ -28,16 +26,16 @@ public class ChatRoomService {
 
     public ChatRoom create(String roomName) {
         ChatRoom chatRoom = new ChatRoom(roomName);
-        rooms.put(CHATROOM_OPS_ID, chatRoom.getId(), chatRoom);
+        rooms.put(ChatRoomConst.CHATROOM_OPS_ID, chatRoom.getId(), chatRoom);
         return chatRoom;
     }
 
     public List<ChatRoom> findAll() {
-        return rooms.values(CHATROOM_OPS_ID);
+        return rooms.values(ChatRoomConst.CHATROOM_OPS_ID);
     }
 
     public ChatRoom findByRoomId(String roomId) {
-        return rooms.get(CHATROOM_OPS_ID, roomId);
+        return rooms.get(ChatRoomConst.CHATROOM_OPS_ID, roomId);
     }
 
     public List<ChatRoomResponse> findRoomInfos() {
@@ -52,7 +50,7 @@ public class ChatRoomService {
     }
 
     public Set<Object> getRoomUsers(String roomId) {
-        return users.members(USER_OPS_ID + roomId);
+        return users.members(ChatRoomConst.USER_OPS_ID + roomId);
     }
 
     public void addUser(String roomId, String userName) {
@@ -60,6 +58,6 @@ public class ChatRoomService {
         if ((byRoomId = findByRoomId(roomId)) == null) {
             return;
         }
-        users.add(USER_OPS_ID + byRoomId.getId(), userName);
+        users.add(ChatRoomConst.USER_OPS_ID + byRoomId.getId(), userName);
     }
 }

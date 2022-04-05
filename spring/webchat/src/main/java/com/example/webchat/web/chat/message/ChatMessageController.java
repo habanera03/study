@@ -3,7 +3,8 @@ package com.example.webchat.web.chat.message;
 import com.example.webchat.chat.message.ChatMessage;
 import com.example.webchat.chat.message.ChatMessage.MessageType;
 import com.example.webchat.chat.message.service.ChatMessageService;
-import com.example.webchat.web.security.JwtTokenProvider;
+import com.example.webchat.stomp.StompPrincipal;
+import com.example.webchat.util.GlobalConst;
 import java.security.Principal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,33 +17,38 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ChatMessageController {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final ChatMessageService chatMessageService;
     private final SimpMessageSendingOperations messagingTemplate;
 
-    public ChatMessageController(JwtTokenProvider jwtTokenProvider,
-                                 ChatMessageService chatMessageService,
-                                 SimpMessageSendingOperations messagingTemplate) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public ChatMessageController(
+        ChatMessageService chatMessageService,
+        SimpMessageSendingOperations messagingTemplate) {
+
         this.chatMessageService = chatMessageService;
         this.messagingTemplate = messagingTemplate;
     }
 
     @MessageMapping("/chat/message")
-    public void message(ChatMessageRequest chatMessageRequest,
-                        @Header("token") String token,
-                        @Header("roomId") String roomId) {
+    public void message(
+        ChatMessageRequest chatMessageRequest,
+        @Header("roomId") String roomId,
+        StompPrincipal principal) {
+
         chatMessageService.send(
             new ChatMessage(
                 roomId,
                 chatMessageRequest.getMessageType(),
-                jwtTokenProvider.getUserNameFromJwt(token),
+                principal.getUserName(),
                 chatMessageRequest.getMessage()));
     }
 
     @MessageExceptionHandler
     public void exceptionHandler(Throwable exception, @Header("roomId") String roomId, Principal principal) {
-        ChatMessage chatMessage = new ChatMessage(roomId, MessageType.MESSAGE, "", exception.getMessage());
+        ChatMessage chatMessage = new ChatMessage(
+            roomId,
+            MessageType.MESSAGE,
+            GlobalConst.EMPTY,
+            exception.getMessage());
         messagingTemplate.convertAndSendToUser(principal.getName(), chatMessage.errorTopic(), chatMessage);
     }
 
