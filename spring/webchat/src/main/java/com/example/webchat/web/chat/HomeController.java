@@ -1,6 +1,8 @@
 package com.example.webchat.web.chat;
 
 import com.example.webchat.chat.room.service.ChatRoomService;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +19,11 @@ public class HomeController {
     }
 
     @GetMapping({"", "/index"})
-    public String home() {
+    public String home(HttpServletResponse response) {
+        Cookie cookie = new Cookie("something", "cookie value");
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
         return "redirect:/home";
     }
 
