@@ -44,13 +44,20 @@ public class ChatRoomService {
             .map(chatRoom -> {
                 return new ChatRoomResponse(
                     chatRoom,
-                    Optional.ofNullable(getRoomUsers(chatRoom.getId())).orElseGet(HashSet::new).size());
+                    Optional.ofNullable(getRoomUsers(chatRoom.getId())).orElseGet(HashSet::new)
+                        .size());
             })
             .collect(Collectors.toList());
     }
 
     public Set<Object> getRoomUsers(String roomId) {
         return users.members(ChatRoomConst.USER_OPS_ID + roomId);
+    }
+
+    public boolean isAlreadyEnter(String roomId, String userName) {
+        return Optional.ofNullable(users.members(ChatRoomConst.USER_OPS_ID + roomId))
+            .orElseGet(HashSet::new)
+            .contains(userName);
     }
 
     public void addUser(String roomId, String userName) {

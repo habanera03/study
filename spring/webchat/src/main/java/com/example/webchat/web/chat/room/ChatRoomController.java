@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/chat")
@@ -30,8 +31,13 @@ public class ChatRoomController {
     }
 
     @GetMapping("/room/{id}")
-    public String enter(@PathVariable String id, Model model) {
+    public String enter(@PathVariable String id, @RequestParam String userName, Model model) {
+        log.info("userName = {}", userName);
+        if (chatRoomService.isAlreadyEnter(id, userName)) {
+            return "redirect:/home";
+        }
         model.addAttribute("roomId", id);
+        model.addAttribute("userName", userName);
         return "chat/room";
     }
 
