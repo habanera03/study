@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = "17"
 
 configurations {
     compileOnly {
@@ -23,7 +23,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation('it.ozimov:embedded-redis:0.7.3') {
         exclude(group: "commons-io", module: "commons-io")
         exclude(group: "com.google.guava", module: "guava")

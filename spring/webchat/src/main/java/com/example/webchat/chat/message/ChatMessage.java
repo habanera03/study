@@ -30,6 +30,15 @@ public class ChatMessage {
     }
 
     public enum MessageType {
-        ENTER, QUIT, MESSAGE;
+        ENTER("님 입장"), QUIT("님 퇴장"), MESSAGE("");
+        private final String defaultMessage;
+
+        MessageType(String defaultMessage) {
+            this.defaultMessage = defaultMessage;
+        }
+
+        public String getDefaultMessage() {
+            return this.defaultMessage;
+        }
     }
 }
