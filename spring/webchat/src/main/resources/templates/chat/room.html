@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>채팅방</title>
-    <style>
-      ul {
-        list-style: none;
-        padding-left: 0;
-      }
-    </style>
+  <meta charset="UTF-8">
+  <title>채팅방</title>
+  <style>
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+  </style>
 </head>
 <body>
 <input type="text" id="message">
@@ -20,57 +20,57 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script th:inline="javascript">
-    /*<![CDATA[*/
-    const sock = new SockJS('/ws-chat');
-    const ws = Stomp.over(sock);
-    const chat = {
-        obj: {
-            messages: $('#messages'),
-            message: $('#message')
-        },
-        data: {
-            roomId: [[${roomId}]],
-            type: 'MESSAGE'
-        },
-        connect: function () {
-            ws.connect({'roomId': chat.data.roomId}, function (frame) {
-                ws.subscribe('/topic/chat/room/' + chat.data.roomId, function (message) {
-                    chat.obj.messages.append('<li>' + chat.createMessage(JSON.parse(message.body)) + '</li>');
-                }, {'roomId': chat.data.roomId});
-                ws.subscribe('/user/topic/errors', function (message) {
-                    alert(JSON.parse(message.body).message);
-                });
-            }, function (error) {
-                chat.fail();
-            });
-        },
-        message: function () {
-            ws.send('/app/chat/message', {'roomId': chat.data.roomId},
-                JSON.stringify({messageType: chat.data.type, message: chat.obj.message.val()}));
-            chat.obj.message.val('');
-        },
-        send: function (url, method, doneMethod) {
-            $.ajax({
-                url: url,
-                method: method,
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8'
-            }).done(function (data) {
-                doneMethod(data);
-            }).fail(function () {
-                chat.fail();
-            });
-        },
-        fail: function () {
-            alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
-            location.href = '/home';
-        },
-        createMessage: function (data) {
-            return '[' + (data.sender === '' ? '알림' : data.sender) + '] ' + data.message;
-        },
-    };
-    chat.connect();
-    /*]]>*/
+  /*<![CDATA[*/
+  const sock = new SockJS('/ws-chat');
+  const ws = Stomp.over(sock);
+  const chat = {
+    obj: {
+      messages: $('#messages'),
+      message: $('#message')
+    },
+    data: {
+      roomId: [[${roomId}]],
+      type: 'MESSAGE'
+    },
+    connect: function () {
+      ws.connect({'roomId': chat.data.roomId}, function (frame) {
+        ws.subscribe('/topic/chat/room/' + chat.data.roomId, function (message) {
+          chat.obj.messages.append('<li>' + chat.createMessage(JSON.parse(message.body)) + '</li>');
+        }, {'roomId': chat.data.roomId});
+        ws.subscribe('/user/topic/errors', function (message) {
+          alert(JSON.parse(message.body).message);
+        });
+      }, function (error) {
+        chat.fail();
+      });
+    },
+    message: function () {
+      ws.send('/app/chat/message', {'roomId': chat.data.roomId},
+          JSON.stringify({messageType: chat.data.type, message: chat.obj.message.val()}));
+      chat.obj.message.val('');
+    },
+    send: function (url, method, doneMethod) {
+      $.ajax({
+        url: url,
+        method: method,
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8'
+      }).done(function (data) {
+        doneMethod(data);
+      }).fail(function () {
+        chat.fail();
+      });
+    },
+    fail: function () {
+      alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
+      location.href = '/home';
+    },
+    createMessage: function (data) {
+      return '[' + (data.sender === '' ? '알림' : data.sender) + '] ' + data.message;
+    },
+  };
+  chat.connect();
+  /*]]>*/
 </script>
 </body>
 </html>

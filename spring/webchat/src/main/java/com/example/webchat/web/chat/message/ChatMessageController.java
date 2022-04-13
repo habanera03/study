@@ -43,13 +43,20 @@ public class ChatMessageController {
     }
 
     @MessageExceptionHandler
-    public void exceptionHandler(Throwable exception, @Header("roomId") String roomId, Principal principal) {
+    public void exceptionHandler(
+        Throwable exception,
+        @Header("roomId") String roomId,
+        Principal principal) {
+
         ChatMessage chatMessage = new ChatMessage(
             roomId,
             MessageType.MESSAGE,
             GlobalConst.EMPTY,
             exception.getMessage());
-        messagingTemplate.convertAndSendToUser(principal.getName(), chatMessage.errorTopic(), chatMessage);
+        messagingTemplate.convertAndSendToUser(
+            principal.getName(),
+            chatMessage.errorTopic(),
+            chatMessage);
     }
 
     @NoArgsConstructor

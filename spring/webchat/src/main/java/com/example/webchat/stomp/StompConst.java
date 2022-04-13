@@ -7,6 +7,7 @@ public interface StompConst {
     String SIMPLE_BROKER = "/topic";
     String ALLOW_ORIGIN_PATTERNS = "*";
     String ROOM_ID = "roomId";
+    String USER_NAME = "userName";
     String UNKNOWN_USER = "UnknownUser";
     String SIMP_USER = "simpUser";
 }
